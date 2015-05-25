@@ -42,10 +42,10 @@ namespace JsonInduction
 
             var edge = Edge;
 
-            if (edge.ObjectSchema == null)
-                edge.ObjectSchema = new InducedObjectSchema();
+            if (edge.Object == null)
+                edge.Object = new InducedObjectSchema();
 
-            Current.Push(edge.ObjectSchema);
+            Current.Push(edge.Object);
         }
 
         protected override JToken AfterVisitObject(JObject obj, JToken result)
@@ -60,10 +60,10 @@ namespace JsonInduction
 
             var edge = Edge;
 
-            if (edge.ArraySchema == null)
-                edge.ArraySchema = new InducedArraySchema();
+            if (edge.Array == null)
+                edge.Array = new InducedArraySchema();
 
-            Current.Push(edge.ArraySchema);
+            Current.Push(edge.Array);
         }
 
         protected override JToken AfterVisitArray(JArray array, JToken result)
@@ -78,10 +78,10 @@ namespace JsonInduction
 
             var edge = Edge;
 
-            if (edge.ValueSchema == null)
-                edge.ValueSchema = new InducedValueSchema();
+            if (edge.Value == null)
+                edge.Value = new InducedValueSchema();
 
-            Current.Push(edge.ValueSchema);
+            Current.Push(edge.Value);
         }
 
         protected override JToken AfterVisitValue(JValue value, JToken result)

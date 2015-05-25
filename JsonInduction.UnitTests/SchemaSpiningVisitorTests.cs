@@ -61,28 +61,28 @@ namespace JsonInduction
             AssertBasicObjectSpine(schema);
 
             var salutationSchema = schema["name"]["salutation"];
-            salutationSchema.ValueSchema.Should().NotBeNull();
+            salutationSchema.Value.Should().NotBeNull();
 
-            schema["role"].ValueSchema.Should().NotBeNull();
+            schema["role"].Value.Should().NotBeNull();
 
             var addressSchema = schema["address"];
-            addressSchema["street"].ValueSchema.Should().NotBeNull();
-            addressSchema["city"].ValueSchema.Should().NotBeNull();
+            addressSchema["street"].Value.Should().NotBeNull();
+            addressSchema["city"].Value.Should().NotBeNull();
         }
 
         private static void AssertBasicObjectSpine(InducedSchema schema)
         {
-            schema.AllowedVertexTypes.Should().Be(VertexTypes.Object);
-            schema.ObjectSchema.Should().NotBeNull();
+            schema.AllowedTypes.Should().Be(VertexTypes.Object);
+            schema.Object.Should().NotBeNull();
 
             var nameSchema = schema["name"];
-            nameSchema.AllowedVertexTypes.Should().Be(VertexTypes.Object);
+            nameSchema.AllowedTypes.Should().Be(VertexTypes.Object);
 
             var fnSchema = nameSchema["firstName"];
-            fnSchema.AllowedVertexTypes.Should().Be(VertexTypes.Value);
+            fnSchema.AllowedTypes.Should().Be(VertexTypes.Value);
 
             var lnSchema = nameSchema["lastName"];
-            lnSchema.AllowedVertexTypes.Should().Be(VertexTypes.Value);
+            lnSchema.AllowedTypes.Should().Be(VertexTypes.Value);
         }
     }
 }

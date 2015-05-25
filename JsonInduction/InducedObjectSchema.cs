@@ -29,5 +29,8 @@ namespace JsonInduction
         public InducedPropertySchema this[string name] => GetProperty(name);
 
         public IEnumerable<InducedPropertySchema> Properties => _properties.Values;
+
+        public override string ToString()
+            => $"required: {Properties.Count(x => x.IsRequired)} optional: {Properties.Count(x => !x.IsRequired)}";
     }
 }

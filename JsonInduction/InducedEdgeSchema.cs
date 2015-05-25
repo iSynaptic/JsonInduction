@@ -7,15 +7,30 @@ namespace JsonInduction
 {
     public class InducedEdgeSchema : InducedComponentSchema
     {
-        public InducedValueSchema ValueSchema { get; set; }
-        public InducedObjectSchema ObjectSchema { get; set; }
-        public InducedArraySchema ArraySchema { get; set; }
+        public InducedValueSchema Value { get; set; }
+        public InducedObjectSchema Object { get; set; }
+        public InducedArraySchema Array { get; set; }
 
-        public InducedPropertySchema this[string name] => ObjectSchema?[name];
+        public InducedPropertySchema this[string name] => Object?[name];
 
-        public VertexTypes AllowedVertexTypes =>
-            (ValueSchema != null ? VertexTypes.Value : 0) |
-            (ObjectSchema != null ? VertexTypes.Object : 0) |
-            (ArraySchema != null ? VertexTypes.Array : 0);
+        public VertexTypes AllowedTypes =>
+            (Value != null ? VertexTypes.Value : 0) |
+            (Object != null ? VertexTypes.Object : 0) |
+            (Array != null ? VertexTypes.Array : 0);
+
+        public override string ToString()
+        {
+            var types = 
+                Enum.GetValues(typeof(VertexTypes))
+                    .Cast<VertexTypes>()
+                    .Where(x => (AllowedTypes & x) == x)
+                    .Select(x => Enum.GetName(typeof(VertexTypes), x))
+                    .ToArray();
+
+            if (types.Length == 1)
+                return (Value ?? Object ?? (InducedVertexSchema)Array)?.ToString() ?? "";
+
+            return String.Join("|", types);
+        } 
     }
 }

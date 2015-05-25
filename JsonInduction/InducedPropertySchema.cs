@@ -13,6 +13,10 @@ namespace JsonInduction
         public InducedPropertySchema(string name)
         {
             Name = name;
+            IsRequired = true;
         }
+
+        public override string ToString() 
+            => $"{(IsRequired ? "* " : "")}{Name} ({base.ToString()})";
     }
 }

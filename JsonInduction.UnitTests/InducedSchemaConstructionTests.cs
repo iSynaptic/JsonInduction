@@ -40,6 +40,7 @@ namespace JsonInduction
         private static readonly JObject CompleteObject =
             JObject.Parse(@"
             {
+                id: 'CC2E5F37-86EE-419B-BB35-3F075CDCED9A',
                 name:
                 {
                     firstName: 'John',
@@ -50,16 +51,28 @@ namespace JsonInduction
                 address:
                 {
                     street: '123 Main Street',
-                    city: 'Minneapolis'
-                }
+                    city: 'Minneapolis',
+                    state: 'MN',
+                    postal: '55116',
+                    plusFive: null
+                },
+                stats:
+                {
+                    outgoingCalls: 42,
+                    averageCallLength: '00:04:32',
+                    lastCallAt: '2012-04-23T18:25:43.511Z'
+                },
+                website: 'http://john.smith.com'
             }");
 
         [Test]
         public void AmendedSchema()
         {
             var schema = InducedSchema.Build("test", BasicObject, AmendingObject);
-
+            
             schema.Should().NotBeNull();
+            (schema["name"]["firstName"].Value.AllowedTypes & PrimativeTypes.String)
+                .Should().Be(PrimativeTypes.String);
         }
 
         [Test]

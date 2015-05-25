@@ -7,6 +7,12 @@ namespace JsonInduction
 {
     public class InducedArraySchema : InducedVertexSchema
     {
-        public InducedEdgeSchema ItemSchema { get; set; }
+        public InducedEdgeSchema Item { get; set; }
+
+        public int MinimumItems { get; set; }
+        public float AverageItems { get; set; }
+
+        public override string ToString()
+            => $"min: {MinimumItems} avg: {AverageItems}";
     }
 }
