@@ -11,10 +11,13 @@ namespace JsonInduction
         public SchemaSpiningVisitor(InducedSchema schema)
         {
             Schema = schema;
+            Current.Push(schema);
         }
 
-        protected override JToken VisitProperty(JProperty property)
+        protected override void BeforeVisitProperty(JProperty property)
         {
+            base.BeforeVisitProperty(property);
+
             var obj = (InducedObjectSchema)Vertex;
 
             var prop = obj.GetProperty(property.Name);
@@ -24,57 +27,74 @@ namespace JsonInduction
                 obj.AddProperty(prop);
             }
 
-            Schema = prop;
-            var result = base.VisitProperty(property);
-            Schema = obj;
-
-            return result;
+            Current.Push(prop);
         }
 
-        protected override JToken VisitObject(JObject obj)
+        protected override JToken AfterVisitProperty(JProperty property, JToken result)
         {
+            Current.Pop();
+            return base.AfterVisitProperty(property, result);
+        }
+
+        protected override void BeforeVisitObject(JObject obj)
+        {
+            base.BeforeVisitObject(obj);
+
             var edge = Edge;
 
             if (edge.ObjectSchema == null)
                 edge.ObjectSchema = new InducedObjectSchema();
 
-            Schema = edge.ObjectSchema;
-            var result = base.VisitObject(obj);
-            Schema = edge;
-
-            return result;
+            Current.Push(edge.ObjectSchema);
         }
 
-        protected override JToken VisitArray(JArray array)
+        protected override JToken AfterVisitObject(JObject obj, JToken result)
         {
+            Current.Pop();
+            return base.AfterVisitObject(obj, result);
+        }
+
+        protected override void BeforeVisitArray(JArray array)
+        {
+            base.BeforeVisitArray(array);
+
             var edge = Edge;
 
             if (edge.ArraySchema == null)
                 edge.ArraySchema = new InducedArraySchema();
 
-            Schema = edge.ArraySchema;
-            var result = base.VisitArray(array);
-            Schema = edge;
-
-            return result;
+            Current.Push(edge.ArraySchema);
         }
 
-        protected override JToken VisitValue(JValue val)
+        protected override JToken AfterVisitArray(JArray array, JToken result)
         {
+            Current.Pop();
+            return base.AfterVisitArray(array, result);
+        }
+
+        protected override void BeforeVisitValue(JValue val)
+        {
+            base.BeforeVisitValue(val);
+
             var edge = Edge;
 
             if (edge.ValueSchema == null)
                 edge.ValueSchema = new InducedValueSchema();
 
-            Schema = edge.ValueSchema;
-            var result = base.VisitValue(val);
-            Schema = edge;
-
-            return result;
+            Current.Push(edge.ValueSchema);
         }
 
-        protected InducedComponentSchema Schema { get; private set; }
-        protected InducedEdgeSchema Edge => Schema as InducedEdgeSchema;
-        protected InducedVertexSchema Vertex => Schema as InducedVertexSchema;
+        protected override JToken AfterVisitValue(JValue value, JToken result)
+        {
+            Current.Pop();
+            return base.AfterVisitValue(value, result);
+        }
+
+        protected InducedSchema Schema { get; private set; }
+
+        private Stack<InducedComponentSchema> Current { get; } = new Stack<InducedComponentSchema>();
+
+        protected InducedEdgeSchema Edge => Current.Peek() as InducedEdgeSchema;
+        protected InducedVertexSchema Vertex => Current.Peek() as InducedVertexSchema;
     }
 }

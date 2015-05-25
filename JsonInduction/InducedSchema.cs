@@ -14,6 +14,10 @@ namespace JsonInduction
         public static InducedSchema Build(string name, IEnumerable<JToken> exampleRoots)
         {
             var schema = new InducedSchema(name);
+            var visitor = new SchemaBuildingVisitor(schema);
+
+            foreach (var root in exampleRoots)
+                visitor.Visit(root);
 
             return schema;
         }

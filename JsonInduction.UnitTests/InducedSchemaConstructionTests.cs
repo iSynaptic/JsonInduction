@@ -12,26 +12,60 @@ namespace JsonInduction
     [TestFixture]
     public class InducedSchemaConstructionTests
     {
-        [Test]
-        public void SimpleObjectSchema()
-        {
-            var json = JToken.Parse(@"
+        private static readonly JObject BasicObject =
+            JObject.Parse(@"
             {
                 name:
                 {
-                    first: 'John',
-                    last: 'Smith'
-                },
-                address:
-                {
-                    street: '123 Main Street',
-                    city: 'Minneapolis',
-                    state: 'MN',
-                    postal: '55434'
+                    firstName: 'John',
+                    lastName: 'Smith'
                 }
             }");
 
-            var schema = InducedSchema.Build("test", json);
+        private static readonly JObject AmendingObject =
+            JObject.Parse(@"
+            {
+                name:
+                {
+                    salutation: 'Mr'
+                },
+                role: 'contact',
+                address:
+                {
+                    street: '123 Main Street',
+                    city: 'Minneapolis'
+                }
+            }");
+
+        private static readonly JObject CompleteObject =
+            JObject.Parse(@"
+            {
+                name:
+                {
+                    firstName: 'John',
+                    lastName: 'Smith',
+                    salutation: 'Mr'
+                },
+                role: 'contact',
+                address:
+                {
+                    street: '123 Main Street',
+                    city: 'Minneapolis'
+                }
+            }");
+
+        [Test]
+        public void AmendedSchema()
+        {
+            var schema = InducedSchema.Build("test", BasicObject, AmendingObject);
+
+            schema.Should().NotBeNull();
+        }
+
+        [Test]
+        public void SimpleObjectSchema()
+        {
+            var schema = InducedSchema.Build("test", CompleteObject);
 
             schema.Should().NotBeNull();
         }

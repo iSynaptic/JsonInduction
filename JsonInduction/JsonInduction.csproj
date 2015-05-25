@@ -45,6 +45,7 @@
     <Compile Include="JsonVisitor.cs" />
     <Compile Include="PathAwareJsonVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SchemaBuildingVisitor.cs" />
     <Compile Include="SchemaSpiningVisitor.cs" />
     <Compile Include="VertexTypes.cs" />
   </ItemGroup>

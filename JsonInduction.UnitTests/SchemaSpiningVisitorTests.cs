@@ -22,6 +22,21 @@ namespace JsonInduction
                 }
             }");
 
+        private static readonly JObject AmendingObject = 
+            JObject.Parse(@"
+            {
+                name:
+                {
+                    salutation: 'Mr'
+                },
+                role: 'contact',
+                address:
+                {
+                    street: '123 Main Street',
+                    city: 'Minneapolis'
+                }
+            }");
+
         [Test]
         public void CreatesSpine()
         {
@@ -41,21 +56,7 @@ namespace JsonInduction
             var visitor = new SchemaSpiningVisitor(schema);
             visitor.Visit(BasicObject);
 
-            var json = JObject.Parse(@"
-            {
-                name:
-                {
-                    salutation: 'Mr'
-                },
-                role: 'contact',
-                address:
-                {
-                    street: '123 Main Street',
-                    city: 'Minneapolis'
-                }
-            }");
-
-            visitor.Visit(json);
+            visitor.Visit(AmendingObject);
 
             AssertBasicObjectSpine(schema);
 
