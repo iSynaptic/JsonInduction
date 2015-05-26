@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 
 namespace JsonInduction
 {
@@ -12,6 +13,33 @@ namespace JsonInduction
         }
 
         protected InducedValueSchema Value => Vertex as InducedValueSchema;
+        protected InducedObjectSchema Object => Vertex as InducedObjectSchema;
+
+        protected override JToken VisitObject(JObject obj)
+        {
+            if(!obj.Properties().Any())
+                Object.CanBeEmpty = true;
+
+            bool isNewObject = !Object.CanBeEmpty && !Object.Properties.Any();
+
+            var optional = new HashSet<string>();
+
+            optional.UnionWith(Object.Properties.Select(x => x.Name));
+            optional.SymmetricExceptWith(obj.Properties().Select(x => x.Name));
+
+            var result = base.VisitObject(obj);
+
+            if (!isNewObject)
+            {
+                foreach (var prop in Object.Properties)
+                {
+                    if (optional.Contains(prop.Name))
+                        prop.IsRequired = false;
+                }
+            }
+
+            return result;
+        }
 
         protected override JToken VisitValue(JValue val)
         {

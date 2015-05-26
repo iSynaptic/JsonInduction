@@ -73,6 +73,9 @@ namespace JsonInduction
             schema.Should().NotBeNull();
             (schema["name"]["firstName"].Value.AllowedTypes & PrimativeTypes.String)
                 .Should().Be(PrimativeTypes.String);
+
+            schema["name"].IsRequired.Should().BeTrue();
+            schema["role"].IsRequired.Should().BeFalse();
         }
 
         [Test]

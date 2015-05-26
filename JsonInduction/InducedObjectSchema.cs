@@ -10,6 +10,11 @@ namespace JsonInduction
         private readonly Dictionary<string, InducedPropertySchema> _properties
             = new Dictionary<string, InducedPropertySchema>();
 
+        public InducedObjectSchema()
+        {
+            CanBeEmpty = false;
+        }
+
         public InducedPropertySchema GetProperty(string name)
         {
             InducedPropertySchema result;
@@ -28,6 +33,7 @@ namespace JsonInduction
 
         public InducedPropertySchema this[string name] => GetProperty(name);
 
+        public bool CanBeEmpty { get; set; }
         public IEnumerable<InducedPropertySchema> Properties => _properties.Values;
 
         public override string ToString()
