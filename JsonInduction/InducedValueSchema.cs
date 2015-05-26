@@ -10,11 +10,13 @@ namespace JsonInduction
         private Dictionary<string, int> _stringValues;
 
         public bool CanBeNull { get; set; }
+        public bool AlwaysNull => AllowedTypes == (PrimativeTypes)0;
+
         public PrimativeTypes AllowedTypes { get; set; }
 
         public void AddNull() => CanBeNull = true; 
         public void AddBool(bool value) => AllowedTypes |= PrimativeTypes.Boolean;
-        public void AddFloat(float value) => AllowedTypes |= PrimativeTypes.Float;
+        public void AddFloat(double value) => AllowedTypes |= PrimativeTypes.Float;
         public void AddDate(DateTime value) => AllowedTypes |= PrimativeTypes.Date;
         public void AddGuid(Guid value) => AllowedTypes |= PrimativeTypes.Guid;
         public void AddTimeSpan(TimeSpan value) => AllowedTypes |= PrimativeTypes.TimeSpan;

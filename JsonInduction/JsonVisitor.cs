@@ -77,10 +77,24 @@ namespace JsonInduction
 
         protected virtual JToken VisitArray(JArray array)
         {
+            DispatchArrayItems(array);
+            return array;
+        }
+
+        protected virtual void DispatchArrayItems(JArray array)
+        {
+            BeforeVisitArrayItems(array);
+            VisitArrayItems(array);
+            AfterVisitArrayItems(array);
+        }
+
+        protected virtual void BeforeVisitArrayItems(JArray array) { }
+        protected virtual void AfterVisitArrayItems(JArray array) { }
+
+        protected virtual void VisitArrayItems(JArray array)
+        {
             foreach (var item in array)
                 Dispatch(item);
-
-            return array;
         }
 
         protected virtual JToken DispatchValue(JValue value)

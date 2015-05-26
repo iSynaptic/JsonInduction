@@ -72,6 +72,24 @@ namespace JsonInduction
             return base.AfterVisitArray(array, result);
         }
 
+        protected override void BeforeVisitArrayItems(JArray array)
+        {
+            base.BeforeVisitArrayItems(array);
+
+            var arraySchema = (InducedArraySchema)Vertex;
+
+            if (arraySchema.Item == null)
+                arraySchema.Item = new InducedEdgeSchema();
+
+            Current.Push(arraySchema.Item);
+        }
+
+        protected override void AfterVisitArrayItems(JArray array)
+        {
+            Current.Pop();
+            base.AfterVisitArrayItems(array);
+        }
+
         protected override void BeforeVisitValue(JValue val)
         {
             base.BeforeVisitValue(val);

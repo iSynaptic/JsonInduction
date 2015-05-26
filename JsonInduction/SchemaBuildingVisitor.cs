@@ -14,6 +14,7 @@ namespace JsonInduction
 
         protected InducedValueSchema Value => Vertex as InducedValueSchema;
         protected InducedObjectSchema Object => Vertex as InducedObjectSchema;
+        protected InducedArraySchema Array => Vertex as InducedArraySchema;
 
         protected override JToken VisitObject(JObject obj)
         {
@@ -39,6 +40,12 @@ namespace JsonInduction
             }
 
             return result;
+        }
+
+        protected override JToken VisitArray(JArray array)
+        {
+            Array.AmendStats(array.Count);
+            return base.VisitArray(array);
         }
 
         protected override JToken VisitValue(JValue val)
@@ -77,7 +84,7 @@ namespace JsonInduction
                 Value.AddInteger((long)val.Value);
 
             else if (val.Type == JTokenType.Float)
-                Value.AddFloat((float)val.Value);
+                Value.AddFloat((double)val.Value);
 
             else if (val.Type == JTokenType.Boolean)
                 Value.AddBool((bool)val.Value);
